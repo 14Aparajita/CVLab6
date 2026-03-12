@@ -1,243 +1,190 @@
-# CNN for CIFAR-10 Image Classification
+# CNN-Based Image Classification using CIFAR-10
 
-## Computer Vision Lab Assignment
+## Overview
 
-This repository implements and trains a **Convolutional Neural Network (CNN)** for image classification using the CIFAR-10 dataset.
+This project implements a **Convolutional Neural Network (CNN)** for image classification using the **CIFAR-10 dataset**.
+The model is designed and trained from scratch to learn hierarchical visual features such as edges, textures, and object shapes for accurate classification.
 
----
-
-# Project Overview
-
-The objective of this project is to design and train a custom CNN architecture capable of classifying images from the CIFAR-10 dataset into ten different categories.
-
-The project demonstrates key computer vision concepts including:
-
-* Image preprocessing
-* Convolutional Neural Networks
-* Model training and evaluation
-* Performance analysis
+The goal of this project is to build and train a custom CNN architecture capable of classifying images into ten different object categories.
 
 ---
 
-# Dataset
+## Dataset
 
-The project uses the **CIFAR-10 dataset**.
+The **CIFAR-10 dataset** is a widely used benchmark dataset for image classification.
 
 Dataset characteristics:
 
-* 60,000 color images
-* Image resolution: 32 × 32 pixels
-* 10 image classes
-* 50,000 training images
-* 10,000 testing images
+* **60,000 color images**
+* **10 object classes**
+* **Image size:** 32 × 32 pixels
+* **50,000 training images**
+* **10,000 testing images**
 
-Classes included in the dataset:
+Classes in the dataset:
 
-* airplane
-* automobile
-* bird
-* cat
-* deer
-* dog
-* frog
-* horse
-* ship
-* truck
-
-Dataset source:
-https://www.cs.toronto.edu/~kriz/cifar.html
+* Airplane
+* Automobile
+* Bird
+* Cat
+* Deer
+* Dog
+* Frog
+* Horse
+* Ship
+* Truck
 
 ---
 
-# CNN Architecture
+## Model Architecture
 
-The model is built using three convolutional blocks followed by fully connected layers.
+The CNN architecture consists of three convolutional blocks followed by fully connected layers.
 
-## Convolution Block 1
+### Convolution Block 1
 
 * Conv2D (32 filters, 3×3 kernel)
 * Batch Normalization
 * LeakyReLU Activation
 * MaxPooling (2×2)
 
-## Convolution Block 2
+### Convolution Block 2
 
 * Conv2D (64 filters, 3×3 kernel)
 * Batch Normalization
 * LeakyReLU Activation
 * MaxPooling (2×2)
 
-## Convolution Block 3
+### Convolution Block 3
 
 * Conv2D (128 filters, 3×3 kernel)
 * Batch Normalization
 * LeakyReLU Activation
 * MaxPooling (2×2)
 
-## Fully Connected Layers
+### Fully Connected Layers
 
-* Flatten
+* Flatten Layer
 * Dense Layer (256 neurons)
 * LeakyReLU Activation
 * Dropout (0.3)
+* Output Layer (Softmax)
 
-## Output Layer
-
-* Dense Layer (10 neurons)
-* Softmax Activation
+The Softmax layer outputs probability scores for the 10 CIFAR-10 classes.
 
 ---
 
-# Training Configuration
+## Training Configuration
 
-| Parameter     | Value                    |
-| ------------- | ------------------------ |
-| Optimizer     | Adam                     |
-| Loss Function | Categorical Crossentropy |
-| Batch Size    | 32                       |
-| Epochs        | 10                       |
+Model training parameters:
+
+* **Optimizer:** Adam
+* **Learning Rate:** 0.0005
+* **Loss Function:** Categorical Crossentropy
+* **Batch Size:** 32
+* **Epochs:** 10
+* **Evaluation Metric:** Accuracy
 
 ---
 
-# Repository Structure
+## Training Process
+
+The workflow for training the CNN model:
+
+1. Load the CIFAR-10 dataset
+2. Normalize image pixel values
+3. Convert labels into categorical format
+4. Build the CNN architecture
+5. Compile the model
+6. Train the model using the training dataset
+7. Evaluate performance on the test dataset
+
+---
+
+## Results
+
+After training, the model achieves approximately:
+
+**Test Accuracy: ~80%**
+
+This demonstrates the effectiveness of convolutional neural networks for image classification tasks on small-scale datasets.
+
+---
+
+## Project Structure
 
 ```
-cnn-cifar10-computer-vision-lab
+CNN-CIFAR10-Classification
 │
-├── cnn.ipynb
-│
-├── src
-│   └── train_cnn.py
-│
-├── results
-│   └── training_output.png
-│
+├── CNN_CIFAR10.ipynb
 ├── requirements.txt
-│
 ├── README.md
-│
-├── .gitignore
-│
-└── LICENSE
+└── results
+    └── training_accuracy.png
 ```
 
 ---
 
-# Installation
+## Installation
 
-Clone the repository
+Clone the repository and install dependencies:
 
-```
-git clone https://github.com/YOUR_USERNAME/cnn-cifar10-computer-vision-lab.git
-```
-
-Navigate to project directory
-
-```
-cd cnn-cifar10-computer-vision-lab
-```
-
-Install required dependencies
-
-```
+```bash
+git clone https://github.com/yourusername/CNN-CIFAR10-Classification.git
+cd CNN-CIFAR10-Classification
 pip install -r requirements.txt
 ```
 
 ---
 
-# Run Training Script
+## Running the Project
+
+Open the notebook and run all cells:
 
 ```
-python src/train_cnn.py
+CNN_CIFAR10.ipynb
 ```
 
----
+The notebook will:
 
-<!----# Model Training Code
-
-```python
-import tensorflow as tf
-from tensorflow.keras import layers, models
-from tensorflow.keras.datasets import cifar10
-from tensorflow.keras.utils import to_categorical
-
-NUM_CLASSES = 10
-
-(x_train, y_train), (x_test, y_test) = cifar10.load_data()
-
-x_train = x_train.astype("float32") / 255.0
-x_test = x_test.astype("float32") / 255.0
-
-y_train = to_categorical(y_train, NUM_CLASSES)
-y_test = to_categorical(y_test, NUM_CLASSES)
-
-input_layer = layers.Input((32,32,3))
-
-x = layers.Conv2D(32,(3,3),padding="same")(input_layer)
-x = layers.BatchNormalization()(x)
-x = layers.LeakyReLU()(x)
-x = layers.MaxPooling2D((2,2))(x)
-
-x = layers.Conv2D(64,(3,3),padding="same")(x)
-x = layers.BatchNormalization()(x)
-x = layers.LeakyReLU()(x)
-x = layers.MaxPooling2D((2,2))(x)
-
-x = layers.Conv2D(128,(3,3),padding="same")(x)
-x = layers.BatchNormalization()(x)
-x = layers.LeakyReLU()(x)
-x = layers.MaxPooling2D((2,2))(x)
-
-x = layers.Flatten()(x)
-x = layers.Dense(256)(x)
-x = layers.LeakyReLU()(x)
-x = layers.Dropout(0.3)(x)
-
-output_layer = layers.Dense(NUM_CLASSES,activation="softmax")(x)
-
-model = models.Model(input_layer,output_layer)
-
-model.compile(
-optimizer="adam",
-loss="categorical_crossentropy",
-metrics=["accuracy"]
-)
-
-model.fit(
-x_train,
-y_train,
-batch_size=32,
-epochs=10,
-validation_data=(x_test,y_test)
-)
-
-test_loss, test_acc = model.evaluate(x_test,y_test)
-
-print("Test Accuracy:", test_acc)
-```---->
+1. Load the dataset
+2. Train the CNN model
+3. Evaluate performance
+4. Display classification accuracy
 
 ---
 
-# Results
+## Technologies Used
 
-Expected model performance:
-
-Test Accuracy: **~78% – 82%**
-
-The model successfully learns meaningful features from the CIFAR-10 dataset using convolutional layers and achieves good classification accuracy for a basic CNN architecture.
-
----
-
-# Author
-
-Name: Aparajita Vaish
-RollNo: 253100101
-Computer Vision Lab
-Mtech ECE
-Dr. Shyama Prasad Mukherjee International Institute of Information Technology, Naya Raipur
+* Python
+* TensorFlow / Keras
+* NumPy
+* Matplotlib
+* Jupyter Notebook
 
 ---
 
-# License
+## Applications
 
-This project is licensed under the **MIT License**.
+CNN-based image classification models like this are used in:
+
+* Object detection systems
+* Autonomous driving
+* Medical image analysis
+* Surveillance systems
+* Image search engines
+
+---
+
+## Author
+
+Computer Vision Laboratory
+
+Aparajita Vaish
+253100101
+Mtech ECE 
+
+---
+
+## License
+
+This project is for academic and educational purposes.
